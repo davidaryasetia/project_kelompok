@@ -1,8 +1,11 @@
+//import 'package:flutter/cupertino.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:project_kelompok/controllers/auth_controller.dart';
 import 'package:project_kelompok/pages/signup_screen.dart';
 import 'package:project_kelompok/utils/mytheme.dart';
 import 'package:project_kelompok/utils/social_buttons.dart';
@@ -15,6 +18,11 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final forgotEmailController = TextEditingController();
+
+
   @override
   Widget build(BuildContext context) {
     final Size _size = MediaQuery.of(context).size;
@@ -32,26 +40,27 @@ class _LoginScreenState extends State<LoginScreen> {
               SvgPicture.asset("assets/icons/splash_icon.svg"),
               const Padding(
                 padding: EdgeInsets.only(top: 30),
-                child:  Text(
+                child: Text(
                   "Welcome Buddles",
                   style: TextStyle(
-                  fontSize: 22,
-                  color: Colors.white,
-                ),
+                    fontSize: 22,
+                    color: Colors.white,
+                  ),
                 ),
               ),
-                  Text("Login to Book your seat, I sad its your seat",
+              Text(
+                "Login to Book your seat, I sad its your seat",
                 style: TextStyle(
                   fontSize: 15,
                   color: Colors.white.withOpacity(0.7),
                 ),
-                ),
+              ),
               const SizedBox(
                 height: 20,
               ),
-
               Container(
-                margin: const EdgeInsets.symmetric(horizontal: 10, vertical:10 ),
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 padding: const EdgeInsets.all(19),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -70,26 +79,27 @@ class _LoginScreenState extends State<LoginScreen> {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-
                     Padding(
                       padding: const EdgeInsets.only(top: 15),
                       child: TextFormField(
+                        controller: emailController,
                         style: const TextStyle(color: Colors.black),
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(5),
-                            borderSide: BorderSide.none
+                              borderRadius: BorderRadius.circular(5),
+                              borderSide: BorderSide.none
                           ),
                           hintText: "Username",
                           hintStyle: const TextStyle(color: Colors.black45),
                           fillColor: Mytheme.greyColor,
-                           filled: true,
+                          filled: true,
                         ),
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 15),
                       child: TextFormField(
+                        controller: passwordController,
                         obscureText: true,
                         style: const TextStyle(color: Colors.black),
                         decoration: InputDecoration(
@@ -107,33 +117,87 @@ class _LoginScreenState extends State<LoginScreen> {
                     Align(
                       alignment: Alignment.centerRight,
                       child: TextButton(
-                          onPressed: () {},
-                          child: const Text ("Forgot Password?",
+                        onPressed: () {
+                          Get.defaultDialog(
+                            title: "Forgot Password?",
+                            content: TextFormField(
+                              style: const TextStyle(color: Colors.black),
+                              controller: forgotEmailController,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                  borderSide: BorderSide.none,
+                                ),
+                                hintText: "Email address",
+                                hintStyle: const TextStyle(color: Colors.black45),
+                                fillColor: Mytheme.greyColor,
+                                filled: true,
+                              ),
+                            ),
+                            radius: 10,
+                            onWillPop: (){
+                              forgotEmailController.text = "";
+
+                              return Future.value(true);
+                            },
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                            confirm: ElevatedButton(
+                              onPressed: () {
+                                AuthController.instance.forgotPassword(forgotEmailController.text.trim());
+                                forgotEmailController.text = "";
+                                Get.back();
+                              },
+                              style: ElevatedButton.styleFrom(
+                                primary: Mytheme.splash,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                              ),
+                              child: const Center(
+                                child: Padding(
+                                  padding: EdgeInsets.all(12),
+                                  child: Text(
+                                    "Send Reset Mail",
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+
+
+                        //Ini adalah child const text Forgot Password
+                        child: const Text(
+                          "Forgot Password?",
                           style: TextStyle(
                               color: Colors.black54,
-                              fontWeight: FontWeight.w600
-                          ),
-                          ),
+                              fontWeight: FontWeight.w600),
+                        ),
                       ),
                     ),
 
                     ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
+                      onPressed: () {
+                        AuthController.instance.login(
+                            emailController.text.trim(),
+                            passwordController.text.trim());
+                      },
+                      style: ElevatedButton.styleFrom(
                           primary: Mytheme.splash,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5),
                           )),
-                        child: Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(12),
-                            child: Text("LOGIN",
-                              style: TextStyle(fontSize: 16),
-                            ),
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Text(
+                            "LOGIN",
+                            style: TextStyle(fontSize: 16),
                           ),
-                       ),
+                        ),
+                      ),
                     ),
-
                     Padding(
                       padding: const EdgeInsets.only(top: 15),
                       child: Row(
@@ -161,39 +225,43 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 15,bottom: 15),
-                      child: SocialLoginButtons(onFbClick: (){}, onGoogleClick: (){}),
+                      padding: const EdgeInsets.only(top: 15, bottom: 15),
+                      child: SocialLoginButtons(
+                          onFbClick: () {},
+                          onGoogleClick: () {
+                            AuthController.instance.googleLogin();
+                          }),
                     ),
                   ],
                 ),
               ),
               RichText(
                 text: TextSpan(
-                children: [
-                  const TextSpan(text: "Don't have an account ? ",
-                    style: const TextStyle(
-                        fontWeight: FontWeight.w700),
-                  ),
-
-                  TextSpan(text: "Signup",
-                    style: const TextStyle(
-                        decoration: TextDecoration.underline,
-                        fontWeight: FontWeight.w700
+                  children: [
+                    const TextSpan(
+                      text: "Don't have an account ? ",
+                      style: const TextStyle(fontWeight: FontWeight.w700),
                     ),
-                    recognizer: TapGestureRecognizer()..onTap = () {
-                      Navigator.push(context, MaterialPageRoute(builder: (_) => SignUpScreen()));
-                    },
-                  ),
-
-                  const TextSpan(text: " here.",
-                    style: const TextStyle(
-                        fontWeight: FontWeight.w700),
-                  ),
-                ],
-              ),
+                    TextSpan(
+                      text: "Signup",
+                      style: const TextStyle(
+                          decoration: TextDecoration.underline,
+                          fontWeight: FontWeight.w700),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          // Navigator.push(context, MaterialPageRoute(builder: (_) => SignUpScreen()));
+                          Get.to(SignUpScreen());
+                        },
+                    ),
+                    const TextSpan(
+                      text: " here.",
+                      style: const TextStyle(fontWeight: FontWeight.w700),
+                    ),
+                  ],
+                ),
               )
             ],
-        ),
+          ),
         ),
       ),
     );

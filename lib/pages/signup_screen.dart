@@ -1,8 +1,11 @@
-import 'package:flutter/cupertino.dart';
+//import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:project_kelompok/controllers/auth_controller.dart';
+import 'package:project_kelompok/controllers/input_validators.dart';
 import 'package:project_kelompok/utils/mytheme.dart';
 import 'package:project_kelompok/utils/social_buttons.dart';
 
@@ -14,10 +17,16 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final cnfPassController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final Size _size = MediaQuery.of(context).size;
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+    SystemChrome.setSystemUIOverlayStyle(
+        const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
     return Scaffold(
       backgroundColor: Mytheme.splash,
       resizeToAvoidBottomInset: false,
@@ -29,14 +38,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SvgPicture.asset("assets/icons/splash_icon.svg"),
-
-
               const SizedBox(
                 height: 20,
               ),
-
               Container(
-                margin: const EdgeInsets.symmetric(horizontal: 10, vertical:10 ),
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 padding: const EdgeInsets.all(19),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -55,16 +62,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-
                     Padding(
                       padding: const EdgeInsets.only(top: 15),
                       child: TextFormField(
+                        controller: nameController,
                         style: const TextStyle(color: Colors.black),
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(5),
-                              borderSide: BorderSide.none
-                          ),
+                              borderSide: BorderSide.none),
                           hintText: "Name",
                           hintStyle: const TextStyle(color: Colors.black45),
                           fillColor: Mytheme.greyColor,
@@ -75,12 +81,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     Padding(
                       padding: const EdgeInsets.only(top: 15),
                       child: TextFormField(
+                        controller: emailController,
                         style: const TextStyle(color: Colors.black),
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(5),
-                              borderSide: BorderSide.none
-                          ),
+                              borderSide: BorderSide.none),
                           hintText: "Email Address",
                           hintStyle: const TextStyle(color: Colors.black45),
                           fillColor: Mytheme.greyColor,
@@ -91,13 +97,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     Padding(
                       padding: const EdgeInsets.only(top: 15),
                       child: TextFormField(
+                        controller: passwordController,
                         obscureText: true,
                         style: const TextStyle(color: Colors.black),
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(5),
-                              borderSide: BorderSide.none
-                          ),
+                              borderSide: BorderSide.none),
                           hintText: "Password",
                           hintStyle: const TextStyle(color: Colors.black45),
                           fillColor: Mytheme.greyColor,
@@ -108,13 +114,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     Padding(
                       padding: const EdgeInsets.only(top: 15, bottom: 10),
                       child: TextFormField(
+                        controller: cnfPassController,
                         obscureText: true,
                         style: const TextStyle(color: Colors.black),
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(5),
-                              borderSide: BorderSide.none
-                          ),
+                              borderSide: BorderSide.none),
                           hintText: "Confirm Password",
                           hintStyle: const TextStyle(color: Colors.black45),
                           fillColor: Mytheme.greyColor,
@@ -123,22 +129,35 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        if (InputValidator.validateField(
+                                "Name", nameController.text.trim()) &&
+                            InputValidator.validateField(
+                                "Email", emailController.text.trim())) {
+                          if (InputValidator.validatePassword(
+                              passwordController.text,
+                              cnfPassController.text)) {
+                            AuthController.instance.registerUser(
+                                emailController.text.trim(),
+                                passwordController.text.trim());
+                          }
+                        }
+                      },
                       style: ElevatedButton.styleFrom(
                           primary: Mytheme.splash,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5),
                           )),
-                      child: Center(
+                      child: const Center(
                         child: Padding(
                           padding: const EdgeInsets.all(12),
-                          child: Text("LOGIN",
+                          child: Text(
+                            "SIGNUP",
                             style: TextStyle(fontSize: 16),
                           ),
                         ),
                       ),
                     ),
-
                     Padding(
                       padding: const EdgeInsets.only(top: 15),
                       child: Row(
@@ -166,8 +185,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 15,bottom: 15),
-                      child: SocialLoginButtons(onFbClick: (){}, onGoogleClick: (){}),
+                      padding: const EdgeInsets.only(top: 15, bottom: 15),
+                      child: SocialLoginButtons(
+                          onFbClick: () {}, onGoogleClick: () {}),
                     ),
                   ],
                 ),
@@ -175,24 +195,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
               RichText(
                 text: TextSpan(
                   children: [
-                    const TextSpan(text: "Already have and account ?",
-                      style: const TextStyle(
-                          fontWeight: FontWeight.w700),
+                    const TextSpan(
+                      text: "Already have and account ?",
+                      style: const TextStyle(fontWeight: FontWeight.w700),
                     ),
-
-                    TextSpan(text: " Login",
+                    TextSpan(
+                      text: " Login",
                       style: const TextStyle(
                           decoration: TextDecoration.underline,
-                          fontWeight: FontWeight.w700
-                      ),
-                      recognizer: TapGestureRecognizer()..onTap = () {
-                      Navigator.pop(context);
-                      },
-                    ),
-
-                    const TextSpan(text: " here.",
-                      style: const TextStyle(
                           fontWeight: FontWeight.w700),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          Get.back();
+                        },
+                    ),
+                    const TextSpan(
+                      text: " here.",
+                      style: const TextStyle(fontWeight: FontWeight.w700),
                     ),
                   ],
                 ),

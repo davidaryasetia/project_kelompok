@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:project_kelompok/pages/login_screen.dart';
 import 'package:project_kelompok/utils/mytheme.dart';
 
@@ -22,11 +23,11 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     _animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 1000));
     _animation = CurvedAnimation(parent: _animationController, curve: Curves.bounceInOut);
     _animationController.forward();
-    
-    
+
     Timer(
         const Duration(milliseconds: 2500),
-            () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => LoginScreen() ))
+            () => Get.to(LoginScreen())
+        //             Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => LoginScreen() ))
     );
     
     super.initState();
@@ -40,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+    SystemChrome. setSystemUIOverlayStyle(const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
     return Scaffold(
       backgroundColor: Mytheme.splash,
       body: Container(

@@ -21,7 +21,7 @@ class SocialLoginButtons extends StatelessWidget {
                 side: const BorderSide(color: Mytheme.redBorder, width: 0.2),
               ),
               child: InkWell(
-                onTap: () {},
+                onTap: onGoogleClick,
                 borderRadius: BorderRadius.circular(5),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 5 ),
@@ -31,9 +31,16 @@ class SocialLoginButtons extends StatelessWidget {
                       const SizedBox(
                         width: 8,
                       ),
-                    Text("Google"),
-                  ],
-              ),
+                    const Text(
+                        "Google",
+                      style: TextStyle(
+                        color: Color(0xFF666666),
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                      ),
+                    ),
+                    ],
+                 ),
                 ),
               ),
             )
