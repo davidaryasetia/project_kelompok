@@ -3,8 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:project_kelompok/controllers/auth_controller.dart';
+import 'package:project_kelompok/pages/profile_screen.dart';
 import 'package:project_kelompok/utils/constants.dart';
 import 'package:project_kelompok/utils/custom_slider.dart';
 import 'package:project_kelompok/utils/dummy_data.dart';
@@ -55,7 +57,9 @@ class _HomeScreenState extends State<HomeScreen> {
             leading: Padding(
               padding: const EdgeInsets.only(left: 10, top: 10),
               child: GestureDetector(
-                onTap: (){},
+                onTap: (){
+                  Get.to(const ProfileScreen());
+                },
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(25),
                   child: CachedNetworkImage(
